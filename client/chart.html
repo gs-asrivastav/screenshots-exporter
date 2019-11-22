@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/streamgraph.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+</head>
+<body>
+<div id="container"></div>
+</body>
+<script>
+  window.renderHighChart = function (config) {
+    document.getElementById('container').height = config.width || 500;
+    document.getElementById('container').width = config.width || 1000;
+
+    config.chart = {
+      ... config.chart || {},
+      renderTo: 'container',
+      animation: false,
+      events: {
+        load: function (event) {
+          //When is chart ready?
+          const cEvent = new CustomEvent('chart-render-ready');
+          window.dispatchEvent(cEvent);
+          console.info(cEvent);
+        }
+      }
+    };
+    const plotOptions = (config.plotOptions || {});
+    const series = plotOptions.series || {};
+    series.animation = false;
+    plotOptions.series = series;
+    config.plotOptions = plotOptions;
+    console.info(config);
+    Highcharts.chart(config);
+  };
+  let xEvent = new CustomEvent('container-ready');
+  window.dispatchEvent(xEvent);
+  console.info(xEvent);
+</script>
+<style>
+    #container {
+        min-width: 310px;
+        max-width: 800px;
+        height: 400px;
+        margin: 0 auto
+    }
+</style>
+</html>

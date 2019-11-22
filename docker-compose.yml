@@ -1,0 +1,30 @@
+version: '3.6'
+
+networks:
+  screenshot_api_network:
+    driver: bridge
+    driver_opts:
+      com.docker.network.enable_ipv6: "true"
+
+services:
+  screenshot-api:
+    build:
+      context: ./
+      dockerfile: infra/Dockerfile
+    networks:
+      - screenshot_api_network
+    ports:
+      - 3000
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./infra/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - screenshot-api
+    links:
+      - screenshot-api
+    ports:
+      - 5000:5000
+    networks:
+      - screenshot_api_network
