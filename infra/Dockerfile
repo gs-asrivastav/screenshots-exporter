@@ -41,6 +41,6 @@ RUN addgroup -S pptruser && adduser -S -g pptruser pptruser \
 USER pptruser
 WORKDIR $BASE_APP_DIR
 RUN npm install --only=production
-ENV PUPPETEER_ARGS "--no-sandbox,--disable-web-security,----window-size=1920,1080,--disable-dev-shm-usage,--disable-gpu"
+ENV PUPPETEER_ARGS "--no-sandbox,--disable-web-security--window-size=1920,1080,--disable-dev-shm-usage,--disable-gpu"
 EXPOSE 3000
 ENTRYPOINT node $BASE_APP_DIR/dist/main.js

@@ -1,28 +1,32 @@
-import {Inject, Injectable, Logger} from '@nestjs/common';
+import {forwardRef, Global, Inject, Injectable, Logger} from '@nestjs/common';
 import {Cluster} from 'puppeteer-cluster';
-import {EvaluateFn, Page} from 'puppeteer';
+import {ConsoleMessage, ConsoleMessageLocation, ConsoleMessageType, EvaluateFn, Page, ScreenshotOptions} from 'puppeteer';
 import {Readable} from 'stream';
+import {RequestContextInjector} from '../api/providers/request-context-injector.provider';
+import {RequestLoggerService} from '../api/providers/request-logger.provider';
+import {ApplicationConstants} from './application-constants';
 
-@Injectable()
+@Global()
 export class PuppeteerIntegration {
     private readonly logger = new Logger(PuppeteerIntegration.name);
 
-    constructor(@Inject('PUPPETEER_CLUSTER')
-                private readonly cluster: Cluster) {
+    constructor(@Inject('PUPPETEER_CLUSTER') private readonly cluster: Cluster,
+                @Inject(forwardRef(() => RequestContextInjector)) private readonly ctx: RequestContextInjector) {
         // Constructor
         process.setMaxListeners(Infinity);
+        this.logger = new RequestLoggerService(ctx, PuppeteerIntegration.name);
     }
 
     async screenshot(url: string, config: any): Promise<Buffer> {
         return await this.cluster.execute(async ({page, data, worker}) => {
-            await page.setViewport({height: 1080, width: 1920});
+            await page.setViewport(ApplicationConstants.DEFAULT_VIEWPORT_OPTIONS);
             return this.wrapper(this.getFileName(), page, config, 5);
         });
     }
 
     async pdf(url: string, config: any): Promise<Buffer> {
         return await this.cluster.execute(async ({page, data, worker}) => {
-            await page.setViewport({height: 1080, width: 1920});
+            await page.setViewport(ApplicationConstants.DEFAULT_VIEWPORT_OPTIONS);
             this.logger.log(`Width=${page.viewport().width}, Height=${page.viewport().height}`)
             return this.wrapper(this.getFileName(), page, config, 5, true);
         });
@@ -37,12 +41,18 @@ export class PuppeteerIntegration {
     }
 
     private async wrapper(url: string, page: Page, config: any, padding: number = 2, isPdf = false): Promise<Buffer> {
+        const consoleMessages: ConsoleMessage[] = [];
         const listenFor = PuppeteerIntegration.getListenForCallback(page);
+
+        await page.on('console', async msg => {
+            return consoleMessages.push(msg);
+        });
+
         await page.exposeFunction('onCustomEvent', e => {
             // tslint:disable-next-line:no-console
             console.log(`${e.type} fired`, e.detail || '');
         });
-
+        this.logger.log(`Opening URL = ${url}`);
         await page.goto(url);
         // Wait for all network calls to finish.
         // await page.waitForNavigation({waitUntil: 'networkidle0'});
@@ -59,7 +69,7 @@ export class PuppeteerIntegration {
         if (isPdf) {
             result = await page.pdf();
         } else {
-            result = await page.screenshot({
+            const screenshotConfig: ScreenshotOptions = {
                 type: 'png',
                 clip: {
                     x: rect.left - padding,
@@ -67,10 +77,24 @@ export class PuppeteerIntegration {
                     width: rect.width + padding * 2,
                     height: rect.height + padding * 2,
                 },
-            });
+            };
+            this.logger.log(`Positioning = ` + JSON.stringify(screenshotConfig));
+            result = await page.screenshot(screenshotConfig);
         }
         await page.close();
+        this.logConsoleMessages(consoleMessages);
         return result;
+    }
+
+    logConsoleMessages(logs: ConsoleMessage[]) {
+        const mappedLogs = (logs || []).map(log => {
+            return {
+                location: log.location(),
+                text: log.text(),
+                type: log.type(),
+            };
+        });
+        this.logger.debug(`Console Messages:\n${JSON.stringify(mappedLogs)}`);
     }
 
     getFileName() {

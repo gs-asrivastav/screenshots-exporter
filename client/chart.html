@@ -9,12 +9,16 @@
 <div id="container"></div>
 </body>
 <script>
+  console.info(`Loading Script Section:: [User Agent = ${navigator.appVersion}]`);
   window.renderHighChart = function (config) {
-    document.getElementById('container').height = config.width || 500;
+    const start = Date.now();
+    console.info("Modifying configuration for rendering.");
+    document.getElementById('container').height = config.height || 500;
     document.getElementById('container').width = config.width || 1000;
 
+    console.info(`Chart Height=${config.height}, Chart Width=${config.width}`);
     config.chart = {
-      ... config.chart || {},
+      ...config.chart || {},
       renderTo: 'container',
       animation: false,
       events: {
@@ -22,7 +26,7 @@
           //When is chart ready?
           const cEvent = new CustomEvent('chart-render-ready');
           window.dispatchEvent(cEvent);
-          console.info(cEvent);
+          console.info(`Successfully loaded chart, rendering took ${Date.now() - start}ms. [Timestamp = ${new Date()}]`);
         }
       }
     };
@@ -31,12 +35,11 @@
     series.animation = false;
     plotOptions.series = series;
     config.plotOptions = plotOptions;
-    console.info(config);
     Highcharts.chart(config);
   };
   let xEvent = new CustomEvent('container-ready');
   window.dispatchEvent(xEvent);
-  console.info(xEvent);
+  console.info(`Script section load complete.`);
 </script>
 <style>
     #container {

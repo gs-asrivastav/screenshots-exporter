@@ -1,10 +1,12 @@
 import {Module} from '@nestjs/common';
-import {AppController} from './app.controller';
+import {AppController} from './api/controllers/app.controller';
 import {AppService} from './app.service';
 import {PuppeteerIntegration} from './helpers/puppeteer-integration';
 import {ServeStaticModule} from '@nestjs/serve-static';
 import {join} from 'path';
 import {PuppeteerModule} from './helpers/puppeteer.module';
+import {LoggingInterceptor} from './api/interceptors/request-logging.interceptor';
+import {RequestContextInjector} from './api/providers/request-context-injector.provider';
 
 @Module({
     imports: [
@@ -14,7 +16,7 @@ import {PuppeteerModule} from './helpers/puppeteer.module';
         }),
     ],
     controllers: [AppController],
-    providers: [AppService, PuppeteerIntegration],
+    providers: [AppService, RequestContextInjector, PuppeteerIntegration, LoggingInterceptor],
 })
 export class AppModule {
 }

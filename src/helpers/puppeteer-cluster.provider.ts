@@ -23,6 +23,6 @@ export const puppeteerCluster = [
                 this.logger.log(`Error crawling ${data}: ${err.message}`);
             });
             return cluster;
-        }
+        },
     },
 ];
