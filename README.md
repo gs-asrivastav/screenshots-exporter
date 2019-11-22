@@ -71,3 +71,22 @@ Successful Requests: 100
 Failed Requests: 0
 ```
 
+
+## Sample Requests
+- First Run `docker-compose up`
+- Try the following curl request
+```
+curl --request POST \
+  --url http://localhost:5000/highcharts/screenshot \
+  --header 'Accept: */*' \
+  --header 'Accept-Encoding: gzip, deflate' \
+  --header 'Cache-Control: no-cache' \
+  --header 'Connection: keep-alive' \
+  --header 'Content-Length: 870' \
+  --header 'Content-Type: application/json' \
+  --header 'Host: localhost:5000' \
+  --header 'Postman-Token: 461fbbc0-08b7-4d5b-a236-563dc46ffec9,0d73c3f9-8697-47e3-9b0a-92164ec42219' \
+  --header 'User-Agent: PostmanRuntime/7.20.1' \
+  --header 'cache-control: no-cache' \
+  --data '{"chart":{"type":"bar"},"title":{"text":"Historic World Population by Region"},"subtitle":{"text":"Source: <a href=\"https://en.wikipedia.org/wiki/World_population\">Wikipedia.org</a>"},"xAxis":{"categories":["Africa","America","Asia","Europe","Oceania"],"title":{"text":null}},"yAxis":{"min":0,"title":{"text":"Population (millions)","align":"high"},"labels":{"overflow":"justify"}},"tooltip":{"valueSuffix":" millions"},"plotOptions":{"bar":{"dataLabels":{"enabled":true}}},"legend":{"layout":"vertical","align":"right","verticalAlign":"top","x":-40,"y":80,"floating":true,"borderWidth":1,"backgroundColor":"#FFFFFF","shadow":true},"credits":{"enabled":false},"series":[{"name":"Year 1800","data":[107,31,635,203,2]},{"name":"Year 1900","data":[133,156,947,408,6]},{"name":"Year 2000","data":[814,841,3714,727,31]},{"name":"Year 2016","data":[1216,1001,4436,738,40]}]}'
+```
