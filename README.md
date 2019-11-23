@@ -353,3 +353,12 @@
     }]
 }
 ```
+
+## Sample API Request
+```
+curl --request POST \
+  --url <api>/tasks/run \
+  --header 'Content-Type: application/json' \
+  --header 'cache-control: no-cache' \
+  --data '{"url":"https://www.google.com","tasks":[{"type":"DOM_INTERACTION","interaction":"type","selector":"//*[@id=\"tsf\"]/div[2]/div[1]/div[1]/div/div[2]/input","useXPath":true,"timeout":500,"arguments":["Uber Stock"]},{"type":"DOM_INTERACTION","interaction":"click","selector":"//*[@value=\"Google Search\"]","useXPath":true,"arguments":[]},{"type":"ELEMENT_SCREENSHOT","selector":"#knowledge-finance-wholepage__entity-summary","padding":5,"args":[]},{"type":"DOM_INTERACTION","interaction":"click","selector":"//*[@data-period=\"5Y\"]","useXPath":true,"arguments":[]},{"type":"ELEMENT_SCREENSHOT","selector":"#knowledge-finance-wholepage__entity-summary","padding":5,"args":[]}]}'
+```
