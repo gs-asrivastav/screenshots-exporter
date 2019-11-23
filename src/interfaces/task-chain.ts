@@ -46,7 +46,7 @@ export interface TaskWithSelector extends Task {
 }
 
 export interface SetCookiesTask extends Task {
-    cookies: SetCookie[];
+    arguments: SetCookie[];
 }
 
 export interface EventWaitTask extends Task {

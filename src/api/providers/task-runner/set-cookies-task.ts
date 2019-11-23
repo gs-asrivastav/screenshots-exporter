@@ -14,8 +14,8 @@ export class SetCookiesTaskRunner extends AbstractTaskRunner {
 
     async doRun(task: Task, page: Page) {
         const internalTask: SetCookiesTask = task as SetCookiesTask;
-        if (Array.isArray(internalTask.cookies) && internalTask.cookies.length > 0) {
-            await page.setCookie(...internalTask.cookies);
+        if (Array.isArray(internalTask.arguments) && internalTask.arguments.length > 0) {
+            await page.setCookie(...internalTask.arguments);
         }
     }
 

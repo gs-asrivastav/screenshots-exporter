@@ -46,7 +46,7 @@ export class AppService {
 
       return {
         results: await this.runTaskChain(taskChain.tasks, page, this.ctx),
-        messages: TaskHelpers.convertConsoleMessages(consoleMessages),
+        // messages: TaskHelpers.convertConsoleMessages(consoleMessages),
       };
     });
   }
