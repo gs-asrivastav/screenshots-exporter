@@ -10,30 +10,30 @@ BuildVersion:	19B88
 
 Hardware:
     Hardware Overview:
-      Model Name: MacBook Pro
-      Model Identifier: MacBookPro15,1
-      Processor Name: 6-Core Intel Core i7
-      Processor Speed: 2.2 GHz
-      Number of Processors: 1
-      Total Number of Cores: 6
-      L2 Cache (per Core): 256 KB
-      L3 Cache: 9 MB
-      Hyper-Threading Technology: Enabled
-      Memory: 16 GB
+Model Name: MacBook Pro
+Model Identifier: MacBookPro15,1
+Processor Name: 6-Core Intel Core i7
+Processor Speed: 2.2 GHz
+Number of Processors: 1
+Total Number of Cores: 6
+L2 Cache (per Core): 256 KB
+L3 Cache: 9 MB
+Hyper-Threading Technology: Enabled
+Memory: 16 GB
 
 Docker Container Stats:
     processors	    : 6
     vendor_id	    : GenuineIntel
     cpu family	    : 6
-    model           : 158
+    model     : 158
     model name	    : Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz
-    stepping        : 10
-    cpu MHz         : 2200.000
-    cache size      : 9216 KB
+    stepping  : 10
+    cpu MHz   : 2200.000
+    cache size: 9216 KB
     physical id     : 0
-    siblings        : 1
-    core id         : 0
-    cpu cores       : 1
+    siblings  : 1
+    core id   : 0
+    cpu cores : 1
 ```
 
 - 5 Concurrent Requests:
@@ -90,3 +90,18 @@ curl --request POST \
   --header 'cache-control: no-cache' \
   --data '{"chart":{"type":"bar"},"title":{"text":"Historic World Population by Region"},"subtitle":{"text":"Source: <a href=\"https://en.wikipedia.org/wiki/World_population\">Wikipedia.org</a>"},"xAxis":{"categories":["Africa","America","Asia","Europe","Oceania"],"title":{"text":null}},"yAxis":{"min":0,"title":{"text":"Population (millions)","align":"high"},"labels":{"overflow":"justify"}},"tooltip":{"valueSuffix":" millions"},"plotOptions":{"bar":{"dataLabels":{"enabled":true}}},"legend":{"layout":"vertical","align":"right","verticalAlign":"top","x":-40,"y":80,"floating":true,"borderWidth":1,"backgroundColor":"#FFFFFF","shadow":true},"credits":{"enabled":false},"series":[{"name":"Year 1800","data":[107,31,635,203,2]},{"name":"Year 1900","data":[133,156,947,408,6]},{"name":"Year 2000","data":[814,841,3714,727,31]},{"name":"Year 2016","data":[1216,1001,4436,738,40]}]}'
 ```
+
+## Generic Task Runner
+### Supported Tasks
+| Task     | Task Key|
+| ------------- |:-------------:|
+| Mount external script file| ADD_SCRIPT_FILE |
+| Set cookies     | SET_COOKIES|
+| Wait for custom/DOM events | EVENT_WAIT|
+| Call JS Functions | FUNCTION_CALL|
+| Interact with DOM | DOM_INTERACTION|
+| Take screenshot of element | ELEMENT_SCREENSHOT|
+| Take screenshot of entire viewport | VIEWPORT_SCREENSHOT|
+| Export viewport as PDF | VIEWPORT_PDF|
+| Navigate to another UTL | NAVIGATION|
+| Static sleep for n milliseconds | SLEEP|
