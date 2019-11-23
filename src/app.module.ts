@@ -1,6 +1,6 @@
 import {Module} from '@nestjs/common';
 import {AppController} from './api/controllers/app.controller';
-import {AppService} from './app.service';
+import {AppService} from './api/providers/app.service';
 import {PuppeteerIntegration} from './helpers/puppeteer-integration';
 import {ServeStaticModule} from '@nestjs/serve-static';
 import {join} from 'path';

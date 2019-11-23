@@ -48,9 +48,9 @@ export class PuppeteerIntegration {
             return consoleMessages.push(msg);
         });
 
-        await page.exposeFunction('onCustomEvent', e => {
-            // tslint:disable-next-line:no-console
-            console.log(`${e.type} fired`, e.detail || '');
+        const thatLogger = this.logger;
+        await page.on('response', async responseEvent => {
+            thatLogger.log(`URL: ${responseEvent.url()}, Status: ${responseEvent.status()}`);
         });
         this.logger.log(`Opening URL = ${url}`);
         await page.goto(url);

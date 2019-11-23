@@ -7,7 +7,7 @@ export const puppeteerCluster = [
             const puppeteerArguments = (process.env.PUPPETEER_ARGS || '')
                 .split(',');
             const cluster = await Cluster.launch({
-                concurrency: Cluster.CONCURRENCY_PAGE,
+                concurrency: Cluster.CONCURRENCY_CONTEXT,
                 maxConcurrency: 5,
                 sameDomainDelay: 0,
                 puppeteerOptions: {
@@ -15,7 +15,7 @@ export const puppeteerCluster = [
                     headless: true,
                     defaultViewport: null,
                     handleSIGINT: false,
-                    args: puppeteerArguments,
+                    args: puppeteerArguments
                 },
             });
             // In case of problems, log them

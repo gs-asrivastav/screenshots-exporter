@@ -1,0 +1,24 @@
+{
+  "url": "https://github.com/nestjs/nest/issues/2111",
+  "tasks": [
+    {
+      "type": "VIEWPORT_SCREENSHOT",
+      "padding": 5,
+      "args": [],
+      "timeout": 10000
+    },{
+      "type": "ELEMENT_SCREENSHOT",
+      "selector": ".repository-content ",
+      "padding": 5,
+      "args": [],
+      "timeout": 10000
+    },{
+      "type": "ELEMENT_SCREENSHOT",
+      "selector": "//*[@data-gid=\"MDEyOklzc3VlQ29tbWVudDQ5OTAwMDgyNw==\"]",
+      "padding": 5,
+      "args": [],
+      "timeout": 10000,
+      "useXPath": true
+    }
+  ]
+}

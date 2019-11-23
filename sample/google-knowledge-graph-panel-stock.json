@@ -1,0 +1,34 @@
+{
+  "url": "https://www.google.com",
+  "tasks": [
+    {
+      "type": "DOM_INTERACTION",
+      "interaction": "type",
+      "selector": "//*[@id=\"tsf\"]/div[2]/div[1]/div[1]/div/div[2]/input",
+      "useXPath": true,
+      "timeout": 500,
+      "arguments": [
+        "Uber Stock"
+      ]
+    },
+    {
+      "type": "DOM_INTERACTION",
+      "interaction": "click",
+      "selector": "//*[@value=\"Google Search\"]",
+      "useXPath": true,
+      "arguments": []
+    },
+    {
+      "type": "ELEMENT_SCREENSHOT",
+      "selector": "#knowledge-finance-wholepage__entity-summary",
+      "padding": 5,
+      "args": []
+    },{
+      "type": "ELEMENT_SCREENSHOT",
+      "selector": "//*[@id=\"rhs\"]/div[1]/div[1]/div[1]",
+      "padding": 5,
+      "args": [],
+      "useXPath": true
+    }
+  ]
+}
