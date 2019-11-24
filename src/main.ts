@@ -1,8 +1,12 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import {NestFactory} from '@nestjs/core';
+import {AppModule} from './app.module';
+import {GlobalExceptionHandler} from './api/filters/global-exception-handler';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  await app.listen(3000);
+    const app = await NestFactory.create(AppModule);
+    await app.enableShutdownHooks()
+        .useGlobalFilters(new GlobalExceptionHandler())
+        .listen(3000);
 }
+
 bootstrap();

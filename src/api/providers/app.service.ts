@@ -1,5 +1,4 @@
 import {forwardRef, Inject, Injectable} from '@nestjs/common';
-import {Cluster} from 'puppeteer-cluster';
 import {RequestContextInjector} from './request-context-injector.provider';
 import {RequestLoggerService} from './request-logger.provider';
 import {Task, TaskChain, TaskStatus, TaskType} from '../../interfaces/task-chain';
@@ -17,19 +16,21 @@ import {SleepTaskRunner} from './task-runner/sleep-task-runner';
 import {AddScriptFileTaskRunner} from './task-runner/add-script-file-task-runner';
 import {AbstractTaskRunner} from './task-runner/abstract-task-runner';
 import {TaskHelpers} from '../../helpers/task-helpers';
+import {PuppeteerTaskWrapper} from './puppeteer/puppeteer-task-wrapper';
+import {TaskFailureError} from '../../error';
 
 @Injectable()
 export class AppService {
   private readonly logger;
 
-  constructor(@Inject('PUPPETEER_CLUSTER') private readonly cluster: Cluster,
+  constructor(@Inject(forwardRef(() => PuppeteerTaskWrapper)) private readonly taskWrapper: PuppeteerTaskWrapper,
               @Inject(forwardRef(() => RequestContextInjector)) private readonly ctx: RequestContextInjector) {
     this.logger = new RequestLoggerService(ctx, AppService.name);
   }
 
   async runTask(taskChain: TaskChain): Promise<any> {
     const consoleMessages: ConsoleMessage[] = [];
-    return this.cluster.execute(async ({page, data, worker}) => {
+    return await this.taskWrapper.run(async (page) => {
       await page.setViewport(ApplicationConstants.DEFAULT_VIEWPORT_OPTIONS);
       this.logger.log(`Width=${page.viewport().width}, Height=${page.viewport().height}`);
 
@@ -38,15 +39,13 @@ export class AppService {
       });
       const thatLogger = this.logger;
       await page.on('response', async responseEvent => {
-        thatLogger.log(`URL: ${responseEvent.url()}, Status: ${responseEvent.status()}`);
+        // thatLogger.verbose(`URL: ${responseEvent.url()}, Status: ${responseEvent.status()}`);
       });
       thatLogger.log(`Opening URL = ${taskChain.url}`);
-      const response = await page.goto(taskChain.url);
-      // this.logger.log(`Response Received: ${response.ok()}`);
-
+      await page.goto(taskChain.url);
+      const response = await this.runTaskChain(taskChain.tasks, page, this.ctx);
       return {
-        results: await this.runTaskChain(taskChain.tasks, page, this.ctx),
-        // messages: TaskHelpers.convertConsoleMessages(consoleMessages),
+        results: response,
       };
     });
   }
@@ -54,18 +53,19 @@ export class AppService {
   private async runTaskChain(tasks: Task[], page: Page, ctx: RequestContextInjector): Promise<any[]> {
     const results = [];
     let taskIndex = 1;
+    let success = true;
     for (const task of tasks) {
       const messagesPerTask: ConsoleMessage[] = [];
       const handler = this.getConsoleHandler(messagesPerTask);
-      await page.on('console', this.getConsoleHandler(messagesPerTask));
 
+      await page.on('console', this.getConsoleHandler(messagesPerTask));
       let result;
-      let success = true;
       const runner = this.runner(task, page, ctx);
       const start = Date.now();
 
       try {
         result = await this.wrapWithTimeout(task, taskIndex, runner.doRun(task, page));
+        success = true;
       } catch (e) {
         success = false;
         this.logger.error(`Failed to run task ${task.type}. [Error = ${e.message}]`);
@@ -82,7 +82,7 @@ export class AppService {
         result,
       });
       if (!success) {
-        break;
+        throw new TaskFailureError(results);
       }
     }
     return results;

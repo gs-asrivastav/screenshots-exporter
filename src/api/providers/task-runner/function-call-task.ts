@@ -14,7 +14,7 @@ export class FunctionCallTaskRunner extends AbstractTaskRunner {
 
     async doRun(task: Task, page: Page) {
         const internalTask: FunctionCallTask = task as FunctionCallTask;
-        return await page.evaluate(FunctionCallTaskRunner.runFn(), internalTask.name, internalTask.args);
+        return await page.evaluate(FunctionCallTaskRunner.runFn(), internalTask.name, internalTask.arguments);
     }
 
     fetchLogs() {
@@ -22,7 +22,7 @@ export class FunctionCallTaskRunner extends AbstractTaskRunner {
     }
 
     static runFn(): EvaluateFn<any> {
-        return (functionName: string, fnArguments) => {
+        return (functionName: string, fnArguments: any[]) => {
             // @ts-ignore
             // tslint:disable-next-line:no-console
             console.info(`Running Function: ${functionName}`);

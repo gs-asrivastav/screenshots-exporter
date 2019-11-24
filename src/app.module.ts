@@ -1,22 +1,15 @@
 import {Module} from '@nestjs/common';
 import {AppController} from './api/controllers/app.controller';
 import {AppService} from './api/providers/app.service';
-import {PuppeteerIntegration} from './helpers/puppeteer-integration';
-import {ServeStaticModule} from '@nestjs/serve-static';
-import {join} from 'path';
-import {PuppeteerModule} from './helpers/puppeteer.module';
+import {PuppeteerModule} from './api/providers/puppeteer/puppeteer.module';
 import {LoggingInterceptor} from './api/interceptors/request-logging.interceptor';
 import {RequestContextInjector} from './api/providers/request-context-injector.provider';
+import {PuppeteerTaskWrapper} from './api/providers/puppeteer/puppeteer-task-wrapper';
 
 @Module({
-    imports: [
-        PuppeteerModule,
-        ServeStaticModule.forRoot({
-            rootPath: join(__dirname, '..', 'client'),
-        }),
-    ],
+    imports: [PuppeteerModule],
     controllers: [AppController],
-    providers: [AppService, RequestContextInjector, PuppeteerIntegration, LoggingInterceptor],
+    providers: [AppService, PuppeteerTaskWrapper, RequestContextInjector, LoggingInterceptor],
 })
 export class AppModule {
 }

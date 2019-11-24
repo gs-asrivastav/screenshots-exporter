@@ -9,6 +9,10 @@ export class RequestContextInjector {
 
     constructor(@Inject(CONTEXT) private readonly context) {
         this._REQUEST_ID = context.headers[ApplicationConstants.X_REQUEST_ID] || uuid();
+        context._internal_context = {
+            requestId: ApplicationConstants.X_REQUEST_ID || uuid(),
+            start: Date.now(),
+        };
     }
 
     public get requestId() {

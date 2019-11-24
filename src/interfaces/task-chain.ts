@@ -65,6 +65,10 @@ export interface DomInteractionTask extends TaskWithSelector {
 
 export interface ElementScreenshotTask extends TaskWithSelector {
     padding?: number;
+    viewport: {
+        height?: number;
+        width?: number;
+    };
 }
 
 export interface PDFTask extends Task {
