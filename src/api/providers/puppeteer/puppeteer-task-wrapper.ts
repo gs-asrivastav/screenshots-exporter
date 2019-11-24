@@ -1,6 +1,6 @@
 import {forwardRef, Global, Inject} from '@nestjs/common';
 import {Pool} from 'generic-pool';
-import {Browser, Page} from 'puppeteer';
+import {Browser, BrowserContext, Page} from 'puppeteer';
 import {RequestContextInjector} from '../request-context-injector.provider';
 import {RequestLoggerService} from '../request-logger.provider';
 import {ResourceUnavailableError} from '../../../error';
@@ -26,8 +26,8 @@ export class PuppeteerTaskWrapper {
             throw new ResourceUnavailableError('Resources unavailable, please scale the system.');
         }
 
-        let incognito;
-        let incognitoPage;
+        let incognito: BrowserContext;
+        let incognitoPage: Page;
         try {
             incognito = await browser.createIncognitoBrowserContext();
             incognitoPage = await incognito.newPage();
