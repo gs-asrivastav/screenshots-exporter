@@ -6,7 +6,7 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     await app.enableShutdownHooks()
         .useGlobalFilters(new GlobalExceptionHandler())
-        .listen(3000);
+        .listen(process.env.port || 3000);
 }
 
 bootstrap();

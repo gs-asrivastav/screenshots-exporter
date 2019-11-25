@@ -17,12 +17,12 @@ function addCleanupTasks(pool: Pool<any>) {
 
     if (pool) {
         pool.on('factoryCreateError', err => {
-            logger.log('Failed to create a pool of puppeteer resources.', err);
+            logger.error('Failed to create a pool of puppeteer resources.', err);
             process.exit(1);
         });
 
         pool.on('factoryDestroyError', err => {
-            logger.log('Failed to destroy puppeteer resources.', err);
+            logger.error('Failed to destroy puppeteer resources.', err);
         });
         ['exit', 'SIGINT', 'SIGUSR2', 'SIGUSR2', 'uncaughtException'].forEach((signal: Signals) => {
             process.once(signal, () => cleanup.apply(undefined, [signal]));

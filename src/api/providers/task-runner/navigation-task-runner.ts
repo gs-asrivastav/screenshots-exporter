@@ -15,7 +15,7 @@ export class NavigationTaskRunner extends AbstractTaskRunner {
     async doRun(task: Task, page: Page): Promise<any> {
         const internalTask: NavigationTask = task as NavigationTask;
         this.logger.verbose(`Starting Navigation Task, navigating to URL = ${internalTask.url}`);
-        await page.goto(internalTask.url);
+        await page.goto(internalTask.url, {waitUntil: 'domcontentloaded'});
     }
 
     fetchLogs() {

@@ -42,7 +42,7 @@ export class AppService {
         // thatLogger.verbose(`URL: ${responseEvent.url()}, Status: ${responseEvent.status()}`);
       });
       thatLogger.log(`Opening URL = ${taskChain.url}`);
-      await page.goto(taskChain.url);
+      await page.goto(taskChain.url, {waitUntil: 'domcontentloaded'});
       const response = await this.runTaskChain(taskChain.tasks, page, this.ctx);
       return {
         results: response,
@@ -66,23 +66,21 @@ export class AppService {
       try {
         result = await this.wrapWithTimeout(task, taskIndex, runner.doRun(task, page));
         success = true;
+
+        results.push({
+          'task-index': taskIndex++,
+          'duration': Date.now() - start,
+          'console-messages': TaskHelpers.convertConsoleMessages(messagesPerTask),
+          'task-logs': runner.fetchLogs(),
+          'status': success ? TaskStatus.SUCCEEDED : TaskStatus.FAILED,
+          result,
+        });
       } catch (e) {
         success = false;
-        this.logger.error(`Failed to run task ${task.type}. [Error = ${e.message}]`);
+        this.logger.error(`Failed to run task ${task.type}. [Error = ${e.message}]\n[Stack = ${e.stack}]`);
+        throw new TaskFailureError(results);
       } finally {
         await page.removeListener('console', handler);
-      }
-
-      results.push({
-        'task-index': taskIndex++,
-        'duration': Date.now() - start,
-        'console-messages': TaskHelpers.convertConsoleMessages(messagesPerTask),
-        'task-logs': runner.fetchLogs(),
-        'status': success ? TaskStatus.SUCCEEDED : TaskStatus.FAILED,
-        result,
-      });
-      if (!success) {
-        throw new TaskFailureError(results);
       }
     }
     return results;
@@ -129,7 +127,7 @@ export class AppService {
         runner = new AddScriptFileTaskRunner(ctx);
         break;
       default:
-        throw new Error(`Invalid task supplied: ${task.type}`);
+        throw new TaskFailureError(task);
     }
     return runner;
   }

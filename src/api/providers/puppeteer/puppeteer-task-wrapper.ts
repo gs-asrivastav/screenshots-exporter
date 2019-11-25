@@ -19,9 +19,10 @@ export class PuppeteerTaskWrapper {
     }
 
     async run(cb: (page: Page) => Promise<any>): Promise<any> {
-        let browser;
+        let browser: Browser;
         try {
             browser = await this.before();
+            this.logger.log(`Assigned Browser PID: ${browser.process().pid}`);
         } catch (e) {
             throw new ResourceUnavailableError('Resources unavailable, please scale the system.');
         }
