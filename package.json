@@ -30,7 +30,6 @@
     "@types/puppeteer": "^2.0.0",
     "generic-pool": "^3.7.1",
     "puppeteer": "^2.0.0",
-    "puppeteer-cluster": "^0.17.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.0",
     "rxjs": "^6.5.3"
