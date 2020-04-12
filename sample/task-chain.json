@@ -10,7 +10,7 @@
     {
       "type": "FUNCTION_CALL",
       "event": "container-ready",
-      "function": "renderHighChart",
+      "name": "renderHighChart",
       "arguments": [
         {
           "chart": {

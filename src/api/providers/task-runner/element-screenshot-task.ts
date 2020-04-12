@@ -17,8 +17,8 @@ export class ElementScreenshotTaskRunner extends AbstractTaskRunner {
         const internalTask: ElementScreenshotTask = task as ElementScreenshotTask;
         // Virtually update the viewport to get full page view.
         await page.setViewport({
-            width: 5000,
-            height: 5000,
+            width: internalTask.viewport?.width || 1920,
+            height: internalTask.viewport?.height || 1080,
         });
         const element: ElementHandle = await TaskHelpers.getElement(page, internalTask);
         const boundingBox: BoundingBox = await element.boundingBox();
