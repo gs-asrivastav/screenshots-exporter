@@ -202,6 +202,9 @@
     ```
   
 - Export viewport as PDF (Base64)
+    - `evaluateFromWindow` is an optional flag, if enabled you can read the dimensions from a defined key in window
+    object. This is useful for full page PDFs in certain scenarios.
+    -  `variableMap` is mandatory only when `evaluateFromWindow` is true.
     ```
     {
       "url": "https://www.google.com",
@@ -209,7 +212,16 @@
         {
           "type": "VIEWPORT_PDF",
           "padding": 5,
-          "args": []
+          "args": [],
+          "options": {
+            "printBackground": true,
+            "preferCSSPageSize": true
+          },
+          "evaluateFromWindow": true,
+          "variableMap": {
+            "width": "maxWidth",
+            "height": "maxHeight"
+          }
         }
       ]
     }

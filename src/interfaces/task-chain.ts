@@ -7,6 +7,7 @@ export enum TaskType {
     FUNCTION_CALL = 'FUNCTION_CALL',
     DOM_INTERACTION = 'DOM_INTERACTION',
     ELEMENT_SCREENSHOT = 'ELEMENT_SCREENSHOT',
+    ELEMENT_PDF = 'ELEMENT_PDF',
     VIEWPORT_SCREENSHOT = 'VIEWPORT_SCREENSHOT',
     VIEWPORT_PDF = 'VIEWPORT_PDF',
     NAVIGATION = 'NAVIGATION',
@@ -74,6 +75,11 @@ export interface ElementScreenshotTask extends TaskWithSelector {
 export interface PDFTask extends Task {
     padding: number;
     options: PDFOptions;
+    evaluateFromWindow?: boolean;
+    variableMap?: {
+        width: string,
+        height: string,
+    };
 }
 
 export interface TaskChain {
