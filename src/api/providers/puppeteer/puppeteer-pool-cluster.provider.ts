@@ -36,6 +36,8 @@ export const puppeteerPool = [
         useFactory: async () => {
             const puppeteerArguments = (process.env.PUPPETEER_ARGS || '')
                 .split(',');
+            // Always keep this flag active
+            puppeteerArguments.push('--disable-web-security');
             const pool: Pool<Browser> = new GenericPuppeteerPool().getPool({
                 executablePath: process.env.CHROME_BIN,
                 headless: true,
