@@ -14,7 +14,7 @@ export class FunctionCallTaskRunner extends AbstractTaskRunner {
 
     async doRun(task: Task, page: Page) {
         const internalTask: FunctionCallTask = task as FunctionCallTask;
-        return await page.evaluate(FunctionCallTaskRunner.runFn(), internalTask.name, internalTask.arguments);
+        return await page.evaluate(FunctionCallTaskRunner.runFn(), internalTask.name, internalTask.arguments || []);
     }
 
     fetchLogs() {

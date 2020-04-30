@@ -56,7 +56,7 @@ export class AppService {
             const messagesPerTask: ConsoleMessage[] = [];
             const handler = this.getConsoleHandler(messagesPerTask);
 
-            await page.on('console', this.getConsoleHandler(messagesPerTask));
+            await page.on('console', handler);
             let result;
             const runner = this.runner(task, page, ctx);
             const start = Date.now();
